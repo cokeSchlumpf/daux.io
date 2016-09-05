@@ -4,8 +4,7 @@ MAINTAINER "Michael Wellner" <michael.wellner@de.ibm.com>
 EXPOSE 80
 
 # Download the daux.io archive on github
-# ADD http://github.com/justinwalsh/daux.io/archive/master.tar.gz /var/www/html/
-COPY master.tar.gz /var/www/html/
+ADD http://github.com/justinwalsh/daux.io/archive/master.tar.gz /var/www/html/
 
 # Untar the archive
 WORKDIR /var/www/html
@@ -25,3 +24,7 @@ RUN \
 
 COPY daux.io.conf /etc/apache2/sites-enabled/daux.io.conf
 COPY update-webhook.php /var/www/html/
+
+# Bluemix ready
+RUN sed -i 's/^PASS_MAX_DAYS.*/PASS_MAX_DAYS   90/' /etc/login.defs
+RUN sed -i 's/sha512/sha512 minlen=8/' /etc/pam.d/common-password
